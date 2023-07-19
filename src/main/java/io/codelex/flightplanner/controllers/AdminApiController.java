@@ -8,12 +8,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.codelex.flightplanner.requests.NewFlightRequest;
+
 @RestController
 @RequestMapping("/admin-api")
 public class AdminApiController {
 
     @PutMapping("/flights")
-    public void registerNewFlight(@RequestBody NewFlightData newFlightData) {
+    public void registerNewFlight(@RequestBody NewFlightRequest newFlightData) {
         // Insert flight registration functionality
     }
 
