@@ -37,14 +37,16 @@ public class AdminApiController {
 
     @GetMapping("/flights/{id}")
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public void getFlightById(@PathVariable String id) {
+    public void getFlightById(@PathVariable int id) {
         // Insert flight data retrieval functionality
     }
 
     @DeleteMapping("/flights/{id}")
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public void deleteFlightById(@PathVariable String id) {
-        // Insert flight deletion functionality
+    public ResponseEntity<Boolean> deleteFlightById(@PathVariable int id) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(this.flightPlannerService.removeFlight(id));
     }
 
     // Controller exception handlers

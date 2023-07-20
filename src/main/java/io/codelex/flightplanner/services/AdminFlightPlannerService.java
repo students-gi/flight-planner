@@ -96,4 +96,15 @@ public class AdminFlightPlannerService {
         );
     }
 
+    /******
+     * Removes a flight from the repository
+     *
+     * @param id The flight's ID
+     * @return True, if a flight with said ID was found and deleted
+     * @return False, if no flight with said ID was located to be deleted
+     */
+    public boolean removeFlight(int id) {
+        return flightRepository.removeFlightById(id);
+    }
+
 }
