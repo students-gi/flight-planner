@@ -4,9 +4,12 @@ import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import org.springframework.stereotype.Repository;
+
 import io.codelex.flightplanner.domain.Flight;
 import io.codelex.flightplanner.exceptions.DuplicateFlightException;
 
+@Repository
 public class FlightRepository {
     private final Set<Flight> flights = new LinkedHashSet<>();
 
