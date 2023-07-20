@@ -15,7 +15,7 @@ import io.codelex.flightplanner.exceptions.DuplicateFlightException;
 public class FlightRepository {
     private final Set<Flight> flights = new LinkedHashSet<>();
 
-    public void addFlight(Flight flight) throws DuplicateFlightException {
+    public synchronized void addFlight(Flight flight) throws DuplicateFlightException {
         if (this.flights.contains(flight)) {
             throw new DuplicateFlightException("Flight with the following details already exists: " + flight);
         }
@@ -32,11 +32,11 @@ public class FlightRepository {
                 .findFirst();
     }
 
-    public boolean removeFlight(Flight flight) {
+    public synchronized boolean removeFlight(Flight flight) {
         return this.flights.remove(flight);
     }
 
-    public boolean removeFlightById(Integer flightId) {
+    public synchronized boolean removeFlightById(Integer flightId) {
         Optional<Flight> optionalFlight = this.findFlightById(flightId);
         if (optionalFlight.isPresent()) {
             return this.removeFlight(optionalFlight.get());
@@ -44,7 +44,7 @@ public class FlightRepository {
         return false;
     }
 
-    public void clearFlights() {
+    public synchronized void clearFlights() {
         this.flights.clear();
     }
 
