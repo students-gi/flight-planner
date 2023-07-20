@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.codelex.flightplanner.domain.Airport;
 import io.codelex.flightplanner.utils.LocalDateTimeFormatter;
 
-public class NewFlightResponse {
+public class FlightResponse {
     @JsonProperty("from")
     private Airport departingFrom;
     @JsonProperty("to")
@@ -23,10 +23,10 @@ public class NewFlightResponse {
     private int id;
 
     // Constructors
-    public NewFlightResponse() {
+    public FlightResponse() {
     }
 
-    public NewFlightResponse(int id, Airport departingFrom, Airport arrivingTo, String carrier,
+    public FlightResponse(int id, Airport departingFrom, Airport arrivingTo, String carrier,
             LocalDateTime timeOfDeparture, LocalDateTime timeOfArrival) {
         this.setDepartingFrom(departingFrom);
         this.setArrivingTo(arrivingTo);
@@ -91,7 +91,7 @@ public class NewFlightResponse {
         if (this == o) {
             return true;
         }
-        NewFlightResponse flight = (NewFlightResponse) o;
+        FlightResponse flight = (FlightResponse) o;
         return Objects.equals(this.departingFrom, flight.departingFrom) &&
                 Objects.equals(this.arrivingTo, flight.arrivingTo) &&
                 Objects.equals(this.carrier, flight.carrier) &&

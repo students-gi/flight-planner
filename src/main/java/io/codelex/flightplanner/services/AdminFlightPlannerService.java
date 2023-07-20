@@ -10,7 +10,7 @@ import io.codelex.flightplanner.exceptions.DuplicateFlightException;
 import io.codelex.flightplanner.exceptions.InvalidNewFlightRequest;
 import io.codelex.flightplanner.repository.FlightRepository;
 import io.codelex.flightplanner.requests.NewFlightRequest;
-import io.codelex.flightplanner.responses.NewFlightResponse;
+import io.codelex.flightplanner.responses.FlightResponse;
 import io.codelex.flightplanner.utils.LocalDateTimeFormatter;
 
 @Service
@@ -28,11 +28,11 @@ public class AdminFlightPlannerService {
      * @throws InvalidNewFlightRequest when flight data validation has failed
      * @throws DuplicateFlightException when an identical flight has been identified in the existing repository
     **/
-    public NewFlightResponse registerNewFlight(NewFlightRequest newFlightRequest)
+    public FlightResponse registerNewFlight(NewFlightRequest newFlightRequest)
             throws InvalidNewFlightRequest, DuplicateFlightException {
         Flight newFlight = validateFlight(newFlightRequest);
         flightRepository.addFlight(newFlight);
-        NewFlightResponse newFlightResponse = responseFlight(newFlight);
+        FlightResponse newFlightResponse = responseFlight(newFlight);
         return newFlightResponse;
     }
 
@@ -85,8 +85,8 @@ public class AdminFlightPlannerService {
     /******
      *  Converts the flight domain object into a response
     **/
-    private static NewFlightResponse responseFlight(Flight completedFlight) {
-        return new NewFlightResponse(
+    private static FlightResponse responseFlight(Flight completedFlight) {
+        return new FlightResponse(
             completedFlight.getId(),
             completedFlight.getDepartingFrom(),
             completedFlight.getArrivingTo(),

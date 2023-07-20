@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.codelex.flightplanner.exceptions.DuplicateFlightException;
 import io.codelex.flightplanner.exceptions.InvalidNewFlightRequest;
 import io.codelex.flightplanner.requests.NewFlightRequest;
-import io.codelex.flightplanner.responses.NewFlightResponse;
+import io.codelex.flightplanner.responses.FlightResponse;
 import io.codelex.flightplanner.services.AdminFlightPlannerService;
 import jakarta.validation.Valid;
 
@@ -29,7 +29,7 @@ public class AdminApiController {
     }
 
     @PutMapping("/flights")
-    public ResponseEntity<NewFlightResponse> registerNewFlight(@Valid @RequestBody NewFlightRequest newFlightData) {
+    public ResponseEntity<FlightResponse> registerNewFlight(@Valid @RequestBody NewFlightRequest newFlightData) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(this.flightPlannerService.registerNewFlight(newFlightData));

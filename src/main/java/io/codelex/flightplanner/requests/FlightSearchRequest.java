@@ -1,45 +1,59 @@
 package io.codelex.flightplanner.requests;
 
-import java.time.LocalDate;
 import java.util.Objects;
 
-import io.codelex.flightplanner.domain.Airport;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 
 public class FlightSearchRequest {
-    private Airport departingFrom;
-    private Airport arrivingTo;
-    private LocalDate dateOfDeparture;
+    @Valid
+    @NotBlank
+    @JsonProperty("from")
+    private String departingFrom;
+    @Valid
+    @NotBlank
+    @JsonProperty("to")
+    private String arrivingTo;
+    @Valid
+    @NotBlank
+    @JsonProperty("departureDate")
+    private String dateOfDeparture;
 
     // Constructor
-    public FlightSearchRequest(Airport departingFrom, Airport arrivingTo, LocalDate dateOfDeparture) {
-        this.departingFrom = departingFrom;
-        this.arrivingTo = arrivingTo;
-        this.dateOfDeparture = dateOfDeparture;
+    public FlightSearchRequest(){
+    }
+
+    public FlightSearchRequest(String departingFrom, String arrivingTo, String dateOfDeparture) {
+        this.setDepartingFrom(departingFrom);
+        this.setArrivingTo(arrivingTo);
+        this.setDateOfDeparture(dateOfDeparture);
     }
 
     // Setters
-    public void setDepartingFrom(Airport departingFrom) {
+    public void setDepartingFrom(String departingFrom) {
         this.departingFrom = departingFrom;
     }
 
-    public void setArrivingTo(Airport arrivingTo) {
+    public void setArrivingTo(String arrivingTo) {
         this.arrivingTo = arrivingTo;
     }
 
-    public void setDateOfDeparture(LocalDate dateOfDeparture) {
+    public void setDateOfDeparture(String dateOfDeparture) {
         this.dateOfDeparture = dateOfDeparture;
     }
 
     // Getters
-    public Airport getDepartingFrom() {
+    public String getDepartingFrom() {
         return this.departingFrom;
     }
 
-    public Airport getArrivingTo() {
+    public String getArrivingTo() {
         return this.arrivingTo;
     }
 
-    public LocalDate getDateOfDeparture() {
+    public String getDateOfDeparture() {
         return this.dateOfDeparture;
     }
 
@@ -53,19 +67,19 @@ public class FlightSearchRequest {
             return true;
         }
         FlightSearchRequest request1 = (FlightSearchRequest) o;
-        return Objects.equals(this.departingFrom, request1.departingFrom) &&
-                Objects.equals(this.arrivingTo, request1.arrivingTo) &&
-                Objects.equals(this.dateOfDeparture, request1.dateOfDeparture);
+        return Objects.equals(this.getDepartingFrom(), request1.getDepartingFrom()) &&
+                Objects.equals(this.getArrivingTo(), request1.getArrivingTo()) &&
+                Objects.equals(this.getDateOfDeparture(), request1.getDateOfDeparture());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.departingFrom, this.arrivingTo, this.dateOfDeparture);
+        return Objects.hash(this.getDepartingFrom(), this.getArrivingTo(), this.getDateOfDeparture());
     }
 
     @Override
     public String toString() {
         return String.format("FlightSearchRequest{departingFrom=%s, arrivingTo=%s, dateOfDeparture=%s}",
-                this.departingFrom, this.arrivingTo, this.dateOfDeparture);
+                this.getDepartingFrom(), this.getArrivingTo(), this.getDateOfDeparture());
     }
 }

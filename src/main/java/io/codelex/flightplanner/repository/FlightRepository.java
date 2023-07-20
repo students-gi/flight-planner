@@ -2,6 +2,7 @@ package io.codelex.flightplanner.repository;
 
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -21,30 +22,30 @@ public class FlightRepository {
         flights.add(flight);
     }
 
-    public LinkedList<Flight> getFlights() {
+    public List<Flight> getFlights() {
         return new LinkedList<>(this.flights);
     }
 
     public Optional<Flight> findFlightById(Integer flightId) {
-        return flights.stream()
+        return this.flights.stream()
                 .filter(flight -> flight.getId().equals(flightId))
                 .findFirst();
     }
 
     public boolean removeFlight(Flight flight) {
-        return flights.remove(flight);
+        return this.flights.remove(flight);
     }
 
     public boolean removeFlightById(Integer flightId) {
-        Optional<Flight> optionalFlight = findFlightById(flightId);
+        Optional<Flight> optionalFlight = this.findFlightById(flightId);
         if (optionalFlight.isPresent()) {
-            return removeFlight(optionalFlight.get());
+            return this.removeFlight(optionalFlight.get());
         }
         return false;
     }
 
     public void clearFlights() {
-        flights.clear();
+        this.flights.clear();
     }
 
 }
