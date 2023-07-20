@@ -1,6 +1,7 @@
 package io.codelex.flightplanner.repository;
 
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.Optional;
 import java.util.Set;
 
@@ -18,6 +19,10 @@ public class FlightRepository {
             throw new DuplicateFlightException("Flight with the following details already exists: " + flight);
         }
         flights.add(flight);
+    }
+
+    public LinkedList<Flight> getFlights() {
+        return new LinkedList<>(this.flights);
     }
 
     public Optional<Flight> findFlightById(Integer flightId) {
