@@ -1,47 +1,39 @@
-package io.codelex.flightplanner.requests;
+package io.codelex.flightplanner.responses;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.codelex.flightplanner.domain.Airport;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import io.codelex.flightplanner.utils.LocalDateTimeFormatter;
 
-public class NewFlightRequest {
-    @Valid
-    @NotNull
+public class NewFlightResponse {
     @JsonProperty("from")
     private Airport departingFrom;
-    @Valid
-    @NotNull
     @JsonProperty("to")
     private Airport arrivingTo;
-    @NotBlank
-    @NotNull
     @JsonProperty("carrier")
     private String carrier;
-    @NotBlank
-    @NotNull
     @JsonProperty("departureTime")
     private String timeOfDeparture;
-    @NotBlank
-    @NotNull
     @JsonProperty("arrivalTime")
     private String timeOfArrival;
+    @JsonProperty("id")
+    private int id;
 
     // Constructors
-    public NewFlightRequest() {
+    public NewFlightResponse() {
     }
 
-    public NewFlightRequest(Airport departingFrom, Airport arrivingTo, String carrier,
-            String timeOfDeparture, String timeOfArrival) {
+    public NewFlightResponse(int id, Airport departingFrom, Airport arrivingTo, String carrier,
+            LocalDateTime timeOfDeparture, LocalDateTime timeOfArrival) {
         this.setDepartingFrom(departingFrom);
         this.setArrivingTo(arrivingTo);
         this.setCarrier(carrier);
         this.setTimeOfDeparture(timeOfDeparture);
         this.setTimeOfArrival(timeOfArrival);
+        this.setId(id);
     }
 
     // Setters
@@ -57,12 +49,16 @@ public class NewFlightRequest {
         this.carrier = carrier;
     }
 
-    public void setTimeOfDeparture(String timeOfDeparture) {
-        this.timeOfDeparture = timeOfDeparture;
+    public void setTimeOfDeparture(LocalDateTime timeOfDeparture) {
+        this.timeOfDeparture = LocalDateTimeFormatter.localDateTimeToString(timeOfDeparture);
     }
 
-    public void setTimeOfArrival(String timeOfArrival) {
-        this.timeOfArrival = timeOfArrival;
+    public void setTimeOfArrival(LocalDateTime timeOfArrival) {
+        this.timeOfArrival = LocalDateTimeFormatter.localDateTimeToString(timeOfArrival);
+    }
+
+    private void setId(int id) {
+        this.id = id;
     }
 
     // Getters
@@ -95,25 +91,25 @@ public class NewFlightRequest {
         if (this == o) {
             return true;
         }
-        NewFlightRequest flight = (NewFlightRequest) o;
+        NewFlightResponse flight = (NewFlightResponse) o;
         return Objects.equals(this.departingFrom, flight.departingFrom) &&
                 Objects.equals(this.arrivingTo, flight.arrivingTo) &&
                 Objects.equals(this.carrier, flight.carrier) &&
                 Objects.equals(this.timeOfDeparture, flight.timeOfDeparture) &&
-                Objects.equals(this.timeOfArrival, flight.timeOfArrival);
+                Objects.equals(this.timeOfArrival, flight.timeOfArrival) &&
+                Objects.equals(this.id, flight.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.departingFrom, this.arrivingTo, this.carrier, this.timeOfDeparture,
-                this.timeOfArrival);
+        return Objects.hash(this.departingFrom, this.arrivingTo, this.carrier,
+                this.timeOfDeparture, this.timeOfArrival, this.id);
     }
 
     @Override
     public String toString() {
         return String.format(
-                "Flight{departingFrom=%s, arrivingTo=%s, carrier='%s', timeOfDeparture=%s, timeOfArrival=%s}",
-                this.departingFrom, this.arrivingTo, this.carrier, this.timeOfDeparture, this.timeOfArrival);
+                "Flight{id=%d, from=%s, to=%s, carrier='%s', departureTime=%s, arrivalTime=%s}",
+                this.id, this.departingFrom, this.arrivingTo, this.carrier, this.timeOfDeparture, this.timeOfArrival);
     }
-
 }

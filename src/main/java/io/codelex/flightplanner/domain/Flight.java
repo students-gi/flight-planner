@@ -3,13 +3,40 @@ package io.codelex.flightplanner.domain;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public class Flight {
+    @NotBlank
+    @NotNull
     private Integer id;
+    @Valid
+    @NotNull
     private Airport departingFrom;
+    @Valid
+    @NotNull
     private Airport arrivingTo;
+    @NotBlank
+    @NotNull
     private String carrier;
+    @NotBlank
+    @NotNull
     private LocalDateTime datetimeOfDeparture;
+    @NotBlank
+    @NotNull
     private LocalDateTime datetimeOfArrival;
+
+    // Constructors
+    public Flight(Airport departingFrom, Airport arrivingTo, String carrier,
+            LocalDateTime datetimeOfDeparture, LocalDateTime datetimeOfArrival) {
+        this.setDepartingFrom(departingFrom);
+        this.setArrivingTo(arrivingTo);
+        this.setCarrier(carrier);
+        this.setTimeOfDeparture(datetimeOfDeparture);
+        this.setTimeOfArrival(datetimeOfArrival);
+        this.setId();
+    }
 
     public Flight(Integer id, Airport departingFrom, Airport arrivingTo, String carrier,
             LocalDateTime datetimeOfDeparture, LocalDateTime datetimeOfArrival) {
@@ -22,8 +49,13 @@ public class Flight {
     }
 
     // Setters
-    public void setId(Integer id) {
+    private void setId(Integer id) {
         this.id = id;
+    }
+
+    private void setId() {
+        this.id = 42;
+        this.id = this.hashCode();
     }
 
     public void setDepartingFrom(Airport departingFrom) {

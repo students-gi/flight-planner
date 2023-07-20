@@ -2,12 +2,30 @@ package io.codelex.flightplanner.domain;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.codelex.flightplanner.utils.StringFormatter;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public class Airport {
+    @NotBlank
+    @NotNull
+    @JsonProperty("country")
     private String country;
+    @NotBlank
+    @NotNull
+    @JsonProperty("city")
     private String city;
+    @NotBlank
+    @NotNull
+    @JsonProperty("airport")
     private String id;
 
-    // Constructor
+    // Constructors
+    public Airport() {
+    }
+
     public Airport(String country, String city, String id) {
         this.setCountry(country);
         this.setCity(city);
@@ -16,16 +34,16 @@ public class Airport {
 
     // Setters
     public void setCountry(String country) {
-        this.country = country;
+        this.country = StringFormatter.toTitleCase(country).trim();
     }
 
     public void setCity(String city) {
-        this.city = city;
+        this.city = StringFormatter.toTitleCase(city).trim();
     }
 
     public void setId(String id) {
         // https://www.wikipedia.org/wiki/IATA_airport_code?lang=en
-        this.id = id.toUpperCase();
+        this.id = id.toUpperCase().trim();
     }
 
     // Getters
