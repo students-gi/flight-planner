@@ -8,8 +8,10 @@ import java.util.Set;
 
 import org.springframework.stereotype.Repository;
 
+import io.codelex.flightplanner.domain.Airport;
 import io.codelex.flightplanner.domain.Flight;
 import io.codelex.flightplanner.exceptions.DuplicateFlightException;
+import io.codelex.flightplanner.requests.ValidatedFlightSearchRequest;
 
 @Repository
 public class FlightRepository {
@@ -26,12 +28,6 @@ public class FlightRepository {
         return new LinkedList<>(this.flights);
     }
 
-    public Optional<Flight> findFlightById(Integer flightId) {
-        return this.flights.stream()
-                .filter(flight -> flight.getId().equals(flightId))
-                .findFirst();
-    }
-
     public synchronized boolean removeFlight(Flight flight) {
         return this.flights.remove(flight);
     }
@@ -46,6 +42,57 @@ public class FlightRepository {
 
     public synchronized void clearFlights() {
         this.flights.clear();
+    }
+
+    // Flight property manipulations
+    public List<Airport> getAirports() {
+        Set<Airport> uniqueAirports = new LinkedHashSet<>();
+
+        // Get all (hopefully) unique airports in one place
+        for (Flight flight : flights) {
+            uniqueAirports.add(flight.getDepartingFrom());
+            uniqueAirports.add(flight.getArrivingTo());
+        }
+
+        return new LinkedList<>(uniqueAirports);
+    }
+
+    public List<Airport> findAirports(String searchParams) {
+        List<Airport> knownAirports = this.getAirports();
+        List<Airport> applicableAirports = new LinkedList<Airport>();
+
+        String searchableParams = searchParams.toUpperCase();
+        for (Airport airport : knownAirports) {
+            // Easiest way to find the airport though a phrase
+            // (though perhaps not computationally)
+            // would be by utilizing its toString() method
+            if (airport.toString().toUpperCase().contains(searchableParams)) {
+                applicableAirports.add(airport);
+            }
+        }
+        return applicableAirports;
+    }
+
+    public List<Flight> findFlights(ValidatedFlightSearchRequest searchRequest) {
+        LinkedList<Flight> matchingFlights = new LinkedList<>();
+
+        for (Flight flight : flights) {
+            if ((!searchRequest.getDepartingFromList().contains(flight.getDepartingFrom()))
+                || (!searchRequest.getArrivingToList().contains(flight.getArrivingTo()))
+                || (!searchRequest.getDateOfDeparture().equals(flight.getTimeOfDeparture().toLocalDate()))) {
+                continue;
+            }
+
+            matchingFlights.add(flight);
+        }
+
+        return matchingFlights;
+    }
+
+    public Optional<Flight> findFlightById(Integer flightId) {
+        return this.flights.stream()
+                .filter(flight -> flight.getId().equals(flightId))
+                .findFirst();
     }
 
 }
