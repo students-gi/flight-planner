@@ -12,7 +12,7 @@ import io.codelex.flightplanner.domain.Airport;
 import io.codelex.flightplanner.domain.Flight;
 import io.codelex.flightplanner.exceptions.InvalidFlightSearchRequest;
 import io.codelex.flightplanner.exceptions.UnregisteredFlightIdException;
-import io.codelex.flightplanner.repository.FlightRepository;
+import io.codelex.flightplanner.repository.FlightRepositoryInterface;
 import io.codelex.flightplanner.requests.FlightSearchRequest;
 import io.codelex.flightplanner.requests.ValidatedFlightSearchRequest;
 import io.codelex.flightplanner.responses.FlightResponse;
@@ -21,10 +21,10 @@ import io.codelex.flightplanner.utils.LocalDateTimeFormatter;
 
 @Service
 public class CustomerFlightPlannerService {
-    private final FlightRepository flightRepository;
+    private final FlightRepositoryInterface flightRepository;
 
     // Constructor
-    public CustomerFlightPlannerService(FlightRepository flightRepository) {
+    public CustomerFlightPlannerService(FlightRepositoryInterface flightRepository) {
         this.flightRepository = flightRepository;
     }
 
@@ -38,6 +38,8 @@ public class CustomerFlightPlannerService {
         ValidatedFlightSearchRequest search = validateFlightSearch(searchRequest);
         List<Flight> filteredFlights = this.flightRepository.findFlights(search);
 
+        // Probably needs some kind of a page counter; no clue how it's supposed to be calcuated though
+        // Meaning, the page size limits have not been given in the task definition
         Integer pageCount = (filteredFlights.isEmpty()) ? 0 : 1;
         return new FlightSearchResponse(pageCount, new LinkedList<Flight>(filteredFlights));
     }

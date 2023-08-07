@@ -8,17 +8,17 @@ import io.codelex.flightplanner.domain.Airport;
 import io.codelex.flightplanner.domain.Flight;
 import io.codelex.flightplanner.exceptions.DuplicateFlightException;
 import io.codelex.flightplanner.exceptions.InvalidNewFlightRequest;
-import io.codelex.flightplanner.repository.FlightRepository;
+import io.codelex.flightplanner.repository.FlightRepositoryInterface;
 import io.codelex.flightplanner.requests.NewFlightRequest;
 import io.codelex.flightplanner.responses.FlightResponse;
 import io.codelex.flightplanner.utils.LocalDateTimeFormatter;
 
 @Service
 public class AdminFlightPlannerService {
-    private final FlightRepository flightRepository;
+    private final FlightRepositoryInterface flightRepository;
 
     // Constructor
-    public AdminFlightPlannerService(FlightRepository flightRepository) {
+    public AdminFlightPlannerService(FlightRepositoryInterface flightRepository) {
         this.flightRepository = flightRepository;
     }
 

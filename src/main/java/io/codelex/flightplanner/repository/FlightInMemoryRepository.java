@@ -6,17 +6,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.springframework.stereotype.Repository;
-
 import io.codelex.flightplanner.domain.Airport;
 import io.codelex.flightplanner.domain.Flight;
 import io.codelex.flightplanner.exceptions.DuplicateFlightException;
 import io.codelex.flightplanner.requests.ValidatedFlightSearchRequest;
 
-@Repository
-public class FlightRepository {
+public class FlightInMemoryRepository implements FlightRepositoryInterface {
     private final Set<Flight> flights = new LinkedHashSet<>();
 
+    @Override
     public synchronized void addFlight(Flight flight) throws DuplicateFlightException {
         if (this.flights.contains(flight)) {
             throw new DuplicateFlightException("Flight with the following details already exists: " + flight);
@@ -24,6 +22,7 @@ public class FlightRepository {
         flights.add(flight);
     }
 
+    @Override
     public List<Flight> getFlights() {
         return new LinkedList<>(this.flights);
     }
@@ -32,6 +31,7 @@ public class FlightRepository {
         return this.flights.remove(flight);
     }
 
+    @Override
     public synchronized boolean removeFlightById(Integer flightId) {
         Optional<Flight> optionalFlight = this.findFlightById(flightId);
         if (optionalFlight.isPresent()) {
@@ -40,6 +40,7 @@ public class FlightRepository {
         return false;
     }
 
+    @Override
     public synchronized void clearFlights() {
         this.flights.clear();
     }
@@ -57,6 +58,7 @@ public class FlightRepository {
         return new LinkedList<>(uniqueAirports);
     }
 
+    @Override
     public List<Airport> findAirports(String searchParams) {
         List<Airport> knownAirports = this.getAirports();
         List<Airport> applicableAirports = new LinkedList<Airport>();
@@ -73,6 +75,7 @@ public class FlightRepository {
         return applicableAirports;
     }
 
+    @Override
     public List<Flight> findFlights(ValidatedFlightSearchRequest searchRequest) {
         LinkedList<Flight> matchingFlights = new LinkedList<>();
 
@@ -89,6 +92,7 @@ public class FlightRepository {
         return matchingFlights;
     }
 
+    @Override
     public Optional<Flight> findFlightById(Integer flightId) {
         return this.flights.stream()
                 .filter(flight -> flight.getId().equals(flightId))
