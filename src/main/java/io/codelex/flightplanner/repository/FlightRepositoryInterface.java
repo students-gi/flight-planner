@@ -15,7 +15,7 @@ public interface FlightRepositoryInterface {
      * @param flight The flight to be added.
      * @throws DuplicateFlightException If a flight with the same details already exists.
      */
-    public void addFlight(Flight flight) throws DuplicateFlightException;
+    public Flight addFlight(Flight flight) throws DuplicateFlightException;
 
     /**
      * Retrieves a list of all flights in the repository.

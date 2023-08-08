@@ -31,7 +31,7 @@ public class AdminFlightPlannerService {
     public FlightResponse registerNewFlight(NewFlightRequest newFlightRequest)
             throws InvalidNewFlightRequest, DuplicateFlightException {
         Flight newFlight = validateFlight(newFlightRequest);
-        flightRepository.addFlight(newFlight);
+        newFlight = flightRepository.addFlight(newFlight);
         FlightResponse newFlightResponse = responseFlight(newFlight);
         return newFlightResponse;
     }

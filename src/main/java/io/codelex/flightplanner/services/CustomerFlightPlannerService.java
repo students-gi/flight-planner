@@ -91,4 +91,10 @@ public class CustomerFlightPlannerService {
                 completedFlight.getTimeOfDeparture(),
                 completedFlight.getTimeOfArrival());
     }
+
+    public FlightSearchResponse getFlights() {
+        List<Flight> allFlights = this.flightRepository.getFlights();
+        Integer pageCount = (allFlights.isEmpty()) ? 0 : 1;
+        return new FlightSearchResponse(pageCount, new LinkedList<Flight>(allFlights));
+    }
 }

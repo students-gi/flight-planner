@@ -32,7 +32,7 @@ rm -r flight-planner
 ```
 
 ### Piekļuves punkti
-API ir 6 piekļuves punkti ar 3 dažādiem lietotājiem:
+API ir 7 piekļuves punkti ar 3 dažādiem lietotājiem:
 - **Admin**, kam ir tiesības pievienot un dzēst lidojumus
   - **[PUT]** /admin-api/flights
   - **[DELETE]** /admin-api/flights/{flightId}
@@ -40,6 +40,7 @@ API ir 6 piekļuves punkti ar 3 dažādiem lietotājiem:
   - **[POST]** /testing-api/clear
 - **Customer**, kas spēj meklēt lidojumus un lidostas, un iegūt info par lidojumiem
   - **[GET]** /api/airports
+  - **[GET]** /api/flights/
   - **[POST]** /api/flights/search
   - **[GET]** /api/flights/{flightId}
 

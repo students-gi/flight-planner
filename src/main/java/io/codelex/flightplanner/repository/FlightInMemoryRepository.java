@@ -15,11 +15,11 @@ public class FlightInMemoryRepository implements FlightRepositoryInterface {
     private final Set<Flight> flights = new LinkedHashSet<>();
 
     @Override
-    public synchronized void addFlight(Flight flight) throws DuplicateFlightException {
+    public synchronized Flight addFlight(Flight flight) throws DuplicateFlightException {
         if (this.flights.contains(flight)) {
             throw new DuplicateFlightException("Flight with the following details already exists: " + flight);
         }
-        flights.add(flight);
+        return (flights.add(flight)) ? flight : null;
     }
 
     @Override

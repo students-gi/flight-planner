@@ -9,47 +9,64 @@ import io.codelex.flightplanner.exceptions.DuplicateFlightException;
 import io.codelex.flightplanner.requests.ValidatedFlightSearchRequest;
 
 public class FlightDatabaseRepository implements FlightRepositoryInterface {
+    private final DatabaseTableAirports tableAirports;
+    private final DatabaseTableFlights tableFlights;
+
+    public FlightDatabaseRepository(DatabaseTableAirports tableAirports, DatabaseTableFlights tableFlights) {
+        this.tableAirports = tableAirports;
+        this.tableFlights = tableFlights;
+    }
 
     @Override
-    public void addFlight(Flight flight) throws DuplicateFlightException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addFlight'");
+    public synchronized Flight addFlight(Flight flight) throws DuplicateFlightException {
+        if (this.tableFlights.existsExact(flight)) {
+            throw new DuplicateFlightException("Flight with the following details already exists: " + flight);
+        }
+
+        Airport airport1 = flight.getDepartingFrom();
+        if (!this.tableAirports.existsExact(airport1)) {
+            this.tableAirports.save(airport1);
+        }
+        Airport airport2 = flight.getArrivingTo();
+        if (!this.tableAirports.existsExact(airport2)) {
+            this.tableAirports.save(airport2);
+        }
+        return this.tableFlights.save(flight);
     }
 
     @Override
     public List<Flight> getFlights() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getFlights'");
+        return this.tableFlights.findAll();
     }
 
     @Override
     public boolean removeFlightById(Integer flightId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'removeFlightById'");
+        if (this.tableFlights.existsById(flightId)) {
+            this.tableFlights.deleteById(flightId);
+            return true;
+        }
+        return false;
     }
 
     @Override
     public void clearFlights() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'clearFlights'");
+        this.tableFlights.deleteAll();
+        this.tableAirports.deleteAll();
     }
 
     @Override
     public List<Airport> findAirports(String searchParams) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findAirports'");
+        return this.tableAirports.searchAirport(searchParams.trim().toUpperCase());
     }
 
     @Override
     public List<Flight> findFlights(ValidatedFlightSearchRequest searchRequest) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findFlights'");
+        return this.tableFlights.searchFlight(searchRequest);
     }
 
     @Override
     public Optional<Flight> findFlightById(Integer flightId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findFlightById'");
+        return this.tableFlights.findById(flightId);
     }
 
 }
