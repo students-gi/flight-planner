@@ -7,7 +7,7 @@ public class StringFormatter {
     // https://www.baeldung.com/java-string-title-case
     public static String toTitleCase(String text) {
         if (text == null || text.isEmpty()) {
-            return text;
+            return "";
         }
 
         StringBuilder converted = new StringBuilder();

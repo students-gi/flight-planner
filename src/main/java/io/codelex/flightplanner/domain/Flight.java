@@ -3,28 +3,45 @@ package io.codelex.flightplanner.domain;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+@Entity(name = "Flights")
+@Table(name = "Flights")
 public class Flight {
-    @NotBlank
     @NotNull
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;
     @Valid
     @NotNull
+    @ManyToOne
+    @JoinColumn(name = "departing_from", referencedColumnName = "id")
     private Airport departingFrom;
     @Valid
     @NotNull
+    @ManyToOne
+    @JoinColumn(name = "arriving_to", referencedColumnName = "id")
     private Airport arrivingTo;
     @NotBlank
     @NotNull
+    @Column(name = "carrier")
     private String carrier;
-    @NotBlank
     @NotNull
+    @Column(name = "datetime_departure")
     private LocalDateTime datetimeOfDeparture;
-    @NotBlank
     @NotNull
+    @Column(name = "datetime_arrival")
     private LocalDateTime datetimeOfArrival;
 
     // Constructors
@@ -47,6 +64,8 @@ public class Flight {
         this.setTimeOfDeparture(datetimeOfDeparture);
         this.setTimeOfArrival(datetimeOfArrival);
     }
+
+    public Flight() {}
 
     // Setters
     private void setId(Integer id) {

@@ -5,8 +5,6 @@ import java.time.format.DateTimeParseException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 
@@ -14,7 +12,7 @@ import io.codelex.flightplanner.domain.Airport;
 import io.codelex.flightplanner.domain.Flight;
 import io.codelex.flightplanner.exceptions.InvalidFlightSearchRequest;
 import io.codelex.flightplanner.exceptions.UnregisteredFlightIdException;
-import io.codelex.flightplanner.repository.FlightRepository;
+import io.codelex.flightplanner.repository.FlightRepositoryInterface;
 import io.codelex.flightplanner.requests.FlightSearchRequest;
 import io.codelex.flightplanner.requests.ValidatedFlightSearchRequest;
 import io.codelex.flightplanner.responses.FlightResponse;
@@ -23,48 +21,27 @@ import io.codelex.flightplanner.utils.LocalDateTimeFormatter;
 
 @Service
 public class CustomerFlightPlannerService {
-    private final FlightRepository flightRepository;
+    private final FlightRepositoryInterface flightRepository;
 
     // Constructor
-    public CustomerFlightPlannerService(FlightRepository flightRepository) {
+    public CustomerFlightPlannerService(FlightRepositoryInterface flightRepository) {
         this.flightRepository = flightRepository;
     }
 
     // Service methods
     public List<Airport> searchAirports(String searchParams) {
-        // Get all (hopefully) unique airports in one place
-        List<Airport> uniqueAirports = Stream.concat(
-                this.flightRepository.getFlights().stream()
-                        .map(Flight::getDepartingFrom),
-                this.flightRepository.getFlights().stream()
-                        .map(Flight::getArrivingTo))
-                .distinct()
-                .collect(Collectors.toList());
-        LinkedList<Airport> applicableAirports = new LinkedList<Airport>();
-        for (Airport airport : uniqueAirports) {
-            // Easiest way to find the airport though a phrase
-            // (though perhaps not computationally)
-            // would be by utilizing its toString() method
-            if (airport.toString().toUpperCase().contains(searchParams.toUpperCase())) {
-                applicableAirports.add(airport);
-            }
-        }
-        return applicableAirports;
+        return flightRepository.findAirports(searchParams);
     }
 
     public FlightSearchResponse searchFlights(FlightSearchRequest searchRequest)
             throws InvalidFlightSearchRequest {
         ValidatedFlightSearchRequest search = validateFlightSearch(searchRequest);
+        List<Flight> filteredFlights = this.flightRepository.findFlights(search);
 
-        // Request was validated; time to fill in the response
-        LinkedList<Flight> filteredFlights = this.flightRepository.getFlights().stream()
-                .filter(flight -> search.getDepartingFromList().contains(flight.getDepartingFrom()))
-                .filter(flight -> search.getArrivingToList().contains(flight.getArrivingTo()))
-                .filter(flight -> flight.getTimeOfDeparture().toLocalDate().equals(search.getDateOfDeparture()))
-                .collect(Collectors.toCollection(LinkedList::new));
-
+        // Probably needs some kind of a page counter; no clue how it's supposed to be calcuated though
+        // Meaning, the page size limits have not been given in the task definition
         Integer pageCount = (filteredFlights.isEmpty()) ? 0 : 1;
-        return new FlightSearchResponse(pageCount, filteredFlights);
+        return new FlightSearchResponse(pageCount, new LinkedList<Flight>(filteredFlights));
     }
 
     private ValidatedFlightSearchRequest validateFlightSearch(FlightSearchRequest requestToValidate)
@@ -113,5 +90,11 @@ public class CustomerFlightPlannerService {
                 completedFlight.getCarrier(),
                 completedFlight.getTimeOfDeparture(),
                 completedFlight.getTimeOfArrival());
+    }
+
+    public FlightSearchResponse getFlights() {
+        List<Flight> allFlights = this.flightRepository.getFlights();
+        Integer pageCount = (allFlights.isEmpty()) ? 0 : 1;
+        return new FlightSearchResponse(pageCount, new LinkedList<Flight>(allFlights));
     }
 }

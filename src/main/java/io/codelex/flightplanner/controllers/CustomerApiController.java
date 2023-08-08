@@ -38,6 +38,13 @@ public class CustomerApiController {
                 .body(this.flightPlannerService.searchAirports(search.trim()));
     }
 
+    @GetMapping("/flights")
+    public ResponseEntity<FlightSearchResponse> getFlights() {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(this.flightPlannerService.getFlights());
+    }
+
     @PostMapping("/flights/search")
     public ResponseEntity<FlightSearchResponse> searchFlights(@RequestBody FlightSearchRequest flightSearchRequest) {
         return ResponseEntity

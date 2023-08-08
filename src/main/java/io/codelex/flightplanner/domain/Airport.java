@@ -5,21 +5,31 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.codelex.flightplanner.utils.StringFormatter;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+@Entity
+@Table(name = "Airports")
 public class Airport {
     @NotBlank
     @NotNull
     @JsonProperty("country")
+    @Column(name = "country")
     private String country;
     @NotBlank
     @NotNull
     @JsonProperty("city")
+    @Column(name = "city")
     private String city;
     @NotBlank
     @NotNull
     @JsonProperty("airport")
+    @Id
+    @Column(name = "id")
     private String id;
 
     // Constructors
